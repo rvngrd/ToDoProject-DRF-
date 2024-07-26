@@ -2,14 +2,17 @@ from django.shortcuts import render
 from rest_framework.request import Request
 from rest_framework.response import Response
 from .models import Todo
-from .serializers import TodoSerialazer
+from .serializers import TodoSerialazer, UserSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
 from rest_framework import viewsets
+from django.contrib.auth import get_user_model
 
 # Create your views here.
+
+User = get_user_model()
 
 # region function base view
 
@@ -143,5 +146,13 @@ class TodosGenericDetailView(generics.RetrieveUpdateDestroyAPIView):
 class TodosViewSetApiView(viewsets.ModelViewSet):
     queryset = Todo.objects.order_by('priority').all()
     serializer_class = TodoSerialazer
+
+# endregion
+
+# region users
+
+class UserGenericApiView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 # endregion
