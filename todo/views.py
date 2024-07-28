@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework import generics, mixins
 from rest_framework import viewsets
 from django.contrib.auth import get_user_model
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 
 # Create your views here.
 
@@ -130,9 +131,14 @@ class TodosDetailMixinApiView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin
 
 # region generics
 
+class TodosGenericApiViewPagination(PageNumberPagination):
+    page_size = 3
+
+
 class TodosGenericApiView(generics.ListCreateAPIView):
     queryset = Todo.objects.order_by('priority').all()
     serializer_class = TodoSerialazer
+    pagination_class = TodosGenericApiViewPagination
 
 
 class TodosGenericDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -146,6 +152,7 @@ class TodosGenericDetailView(generics.RetrieveUpdateDestroyAPIView):
 class TodosViewSetApiView(viewsets.ModelViewSet):
     queryset = Todo.objects.order_by('priority').all()
     serializer_class = TodoSerialazer
+    pagination_class = LimitOffsetPagination
 
 # endregion
 
