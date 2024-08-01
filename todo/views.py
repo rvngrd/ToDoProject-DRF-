@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
 
@@ -60,6 +61,11 @@ def todo_detail_view(request: Request, todo_id: int):
 # region class base view
 
 class TodosListApiView(APIView):
+    @extend_schema(
+        request=TodoSerialazer,
+        responses={201: TodoSerialazer},
+        description='Testing CBVs'
+    )
     def get(self, request: Request):
         todos = Todo.objects.order_by('priority').all()
         todo_serializer = TodoSerialazer(todos, many=True)
